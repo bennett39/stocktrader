@@ -1,0 +1,13 @@
+{% extends "stocktrader/base.html" %}
+
+{% block title %}
+  Porfolio
+{% endblock %}
+
+{% block main %}
+  <h1>Sorry, there's an error</h1>
+  <p class="lead">{{error.0}}</p>
+  {% if error.1 %}
+  <p>{{error.1}}</p>
+  {% endif %}
+{% endblock %}

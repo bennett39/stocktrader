@@ -1,0 +1,14 @@
+{% extends "stocktrader/base.html" %}
+
+{% block title %}
+  Porfolio
+{% endblock %}
+
+{% block main %}
+<h1>Buy</h1>
+<form action="/buy/" method="POST">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}
