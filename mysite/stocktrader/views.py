@@ -36,13 +36,13 @@ class BuyView(LoginRequiredMixin, View):
         return render(request, 'stocktrader/buy.html', context)
 
     def post(self, request):
+        profile = Profile.objects.get(user=request.user)
         form = BuyForm(request.POST)
         if form.is_valid():
-            profile = Profile.objects.get(user=request.user)
             data, error = form.cleaned_data, None
             try:
                 quote = lookup_price(data['symbol'])
-                total = float(data['quantity']) * quote['price']
+                total = data['quantity'] * quote['price']
                 stock, created = Stock.objects.get_or_create(
                     name=quote['name'],
                     symbol=quote['symbol']
@@ -73,7 +73,7 @@ class BuyView(LoginRequiredMixin, View):
             return redirect('home')
         else:
             error = ('Invalid form input',)
-            return apology(request, error)
+            return self.get(request)
 
 
 class SellView(LoginRequiredMixin, View):
@@ -84,13 +84,50 @@ class SellView(LoginRequiredMixin, View):
     """
     def get(self, request):
         profile = Profile.objects.get(user=request.user)
+        portfolio = build_portfolio(profile.transactions.all())
         context = {
             'stocks': get_stocks(),
-            'form': SellForm(**{
-                'portfolio': build_portfolio(profile.transactions.all()),
-            }),
+            'form': SellForm(portfolio=portfolio),
         }
         return render(request, 'stocktrader/sell.html', context)
+
+    def post(self, request):
+        profile = Profile.objects.get(user=request.user)
+        portfolio = build_portfolio(profile.transactions.all())
+        form = SellForm(request.POST, portfolio=portfolio)
+        if form.is_valid():
+            data, error = form.cleaned_data, None
+            try:
+                quote = lookup_price(data['symbol'])
+                total = data['quantity'] * quote['price']
+                stock, created = Stock.objects.get_or_create(
+                    name=quote['name'],
+                    symbol=quote['symbol']
+                )
+            except Exception as e:
+                error = ('No quote available - check API', e)
+                return apology(request, error)
+            try:
+                create_transaction(
+                    profile,
+                    stock,
+                    -data['quantity'],
+                    quote['price']
+                )
+            except Exception as e:
+                error = ('Problem saving order', e)
+                return apology(request, error)
+            try:
+                update_user_cash(profile, total)
+            except Exception as e:
+                error = ('Problem updating cash', e)
+                return apology(request, error)
+            return redirect('home')
+        else:
+            print(form.errors)
+            #  error = ('Invalid form input',)
+            return self.get(request)
+
 
 
 def apology(request, error):
