@@ -3,3 +3,6 @@ class Error(Exception):
 
 class NotEnoughCashError(Error):
     pass
+
+class NotEnoughSharesError(Error):
+    pass
