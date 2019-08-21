@@ -31,7 +31,7 @@ def count_shares_owned(transactions):
     return stocks
 
 
-def create_transaction(user, stock, quantity, price):
+def create_transaction(profile, stock, quantity, price):
     """ Create a new Transaction and save it to db """
     from .models import Transaction
     order = Transaction(
@@ -47,11 +47,9 @@ def get_stocks():
     """
     Loads stocks from JSON file on server
     """
-    stocks = {}
     with open('stocks.json') as f:
         import json
-        stocks = json.load(f)
-    return stocks
+        return json.load(f)
 
 
 def lookup_price(symbol):
@@ -60,31 +58,23 @@ def lookup_price(symbol):
     https://iexcloud.io/docs/api/#quote
     """
     import os
-    from dotenv import load_dotenv
     import requests
+    from dotenv import load_dotenv
     load_dotenv()
-    try:
-        base = "https://cloud.iexapis.com/"
-        version = "stable"
-        endpoint = f"/stock/{symbol}/quote?token="
-        public_token = os.getenv('PUBLIC_TOKEN')
-        response = requests.get(
-            ''.join((base, version, endpoint, public_token))
-        )
-        response.raise_for_status()
-    except requests.RequestException as e:
-        print(e)
-        return None
-    try:
-        quote = response.json()
-        return {
-            'symbol': quote['symbol'],
-            'name': quote['companyName'],
-            'price': quote['latestPrice'],
-        }
-    except (KeyError, TypeError, ValueError) as e:
-        print(e)
-        return None
+    base = "https://cloud.iexapis.com"
+    version = "/stable"
+    endpoint = f"/stock/{symbol}/quote"
+    token = f"?token={os.getenv('PUBLIC_TOKEN')}"
+    response = requests.get(
+        ''.join((base, version, endpoint, token))
+    )
+    response.raise_for_status()
+    quote = response.json()
+    return {
+        'symbol': quote['symbol'],
+        'name': quote['companyName'],
+        'price': quote['latestPrice'],
+    }
 
 
 def update_user_cash(profile, amount):

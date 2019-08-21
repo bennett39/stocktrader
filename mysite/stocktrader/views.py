@@ -9,6 +9,7 @@ from .exceptions import *
 
 
 class HomeView(LoginRequiredMixin, View):
+    """ Display user's current portfolio balances """
     def get(self, request):
         profile = Profile.objects.get(user=request.user)
         portfolio = build_portfolio(profile.transactions.all())
@@ -21,30 +22,43 @@ class HomeView(LoginRequiredMixin, View):
 
 
 class BuyView(LoginRequiredMixin, View):
+    """
+    Via GET: Show a BuyForm to purchase new stocks
+    Via POST: Process BuyForm, creating a new Transaction object in db
+    and updating user.profile.cash
+    """
     def get(self, request):
         context = {
             'stocks': get_stocks(),
             'form': BuyForm(),
         }
         return render(request, 'stocktrader/buy.html', context)
+
     def post(self, request):
         form = BuyForm(request.POST)
         if form.is_valid():
             profile = Profile.objects.get(user=request.user)
             data, error = form.cleaned_data, None
-            quote = lookup_price(data['symbol'])
-            if not quote:
-                error = ('No quote available - check API',)
-                return apology(request, error)
-            total = float(data['quantity']) * quote['price']
-            stock, created = Stock.objects.get_or_create(
-                name=quote['name'],
-                symbol=quote['symbol']
-            )
             try:
-                create_transaction(user, stock, data['quantity'], quote['price'])
+                quote = lookup_price(data['symbol'])
+                total = float(data['quantity']) * quote['price']
+                stock, created = Stock.objects.get_or_create(
+                    name=quote['name'],
+                    symbol=quote['symbol']
+                )
+            except Exception as e:
+                error = ('No quote available - check API', e)
+                return apology(request, error)
+            try:
+                create_transaction(
+                    profile,
+                    stock,
+                    data['quantity'],
+                    quote['price']
+                )
             except Exception as e:
                 error = ('Problem saving order', e)
+                return apology(request, error)
             try:
                 update_user_cash(profile, -total)
             except NotEnoughCashError:
@@ -54,7 +68,6 @@ class BuyView(LoginRequiredMixin, View):
                 )
             except Exception as e:
                 error = ('Problem updating cash', e)
-            if error:
                 return apology(request, error)
             return redirect('home')
         else:
