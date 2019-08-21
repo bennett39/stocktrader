@@ -31,18 +31,6 @@ def count_shares_owned(transactions):
     return stocks
 
 
-def create_transaction(profile, stock, quantity, price):
-    """ Create a new Transaction and save it to db """
-    from .models import Transaction
-    order = Transaction(
-        user=profile,
-        stock=stock,
-        quantity=quantity,
-        price=price
-    )
-    order.save()
-
-
 def get_stocks():
     """
     Loads stocks from JSON file on server
@@ -81,7 +69,6 @@ def update_user_cash(profile, amount):
     """ Add/subtract cash from a User's Profile """
     if profile.cash + amount > 0:
         profile.cash += amount
-        profile.save()
     else:
         from .exceptions import NotEnoughCashError
         raise NotEnoughCashError
