@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Profile, Stock, Transaction
 from .logic import *
-from .forms import BuyForm
+from .forms import BuyForm, SellForm
 from .exceptions import *
 
 
@@ -27,6 +27,7 @@ class BuyView(LoginRequiredMixin, View):
     Via POST: Process BuyForm, creating a new Transaction object in db
     and updating user.profile.cash
     """
+
     def get(self, request):
         context = {
             'stocks': get_stocks(),
@@ -75,6 +76,27 @@ class BuyView(LoginRequiredMixin, View):
             return apology(request, error)
 
 
+class SellView(LoginRequiredMixin, View):
+    """
+    Via GET: Display a SellForm for users to sell stocks.
+    Via POST: Process SellForm to create a Transaction in db and update
+    user.profile.cash
+    """
+    def get(self, request):
+        profile = Profile.objects.get(user=request.user)
+        context = {
+            'stocks': get_stocks(),
+            'form': SellForm(**{
+                'portfolio': build_portfolio(profile.transactions.all()),
+            }),
+        }
+        return render(request, 'stocktrader/sell.html', context)
+
+
 def apology(request, error):
+    """
+    Print error in logs and render the error to user via apology.html
+    template.
+    """
     print(error)
     return render(request, 'stocktrader/apology.html', {'error': error})
