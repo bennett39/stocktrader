@@ -1,0 +1,12 @@
+{% extends "stocktrader/base.html" %}
+
+{% block title %}
+Quote: {{ quote.symbol }}
+{% endblock %}
+
+{% block main %}
+<h1>Quote</h1>
+<p class="lead">
+  One share of {{ quote.symbol }} ({{ quote.name }}) is {{ quote.price }}.
+</p>
+{% endblock %}

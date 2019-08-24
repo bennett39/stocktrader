@@ -1,0 +1,39 @@
+{% extends "stocktrader/base.html" %}
+
+{% block title %}
+  History
+{% endblock %}
+
+{% block main %}
+<h1>History</h1>
+<div class="table-responsive table-hover">
+<table class="table table-sm">
+  <thead class="thead-light">
+  <tr>
+    <th>Symbol</th>
+    <th>Company</th>
+    <th>Buy/Sell</th>
+    <th>Quantity</th>
+    <th>Price</th>
+    <th>Total</th>
+    <th>Time</th>
+  <tr>
+  </thead>
+  <tbody>
+    {% for t in transactions %}
+    <tr>
+      <td>{{t.symbol}}</td>
+      <td>{{t.name}}</td>
+      <td>{{t.buy_sell}}</td>
+      <td>{{t.quantity}}</td>
+      <td>{{t.price}}</td>
+      <td>{{t.total}}</td>
+      <td>{{t.time}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+
+{% endblock %}

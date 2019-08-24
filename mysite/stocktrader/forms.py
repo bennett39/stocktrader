@@ -30,3 +30,10 @@ class SellForm(forms.Form):
             self.fields['symbol'].choices = [
                 (s, d['name']) for s,d in portfolio.items()
             ]
+
+
+class QuoteForm(forms.Form):
+    symbol = forms.CharField(
+        label='Ticker Symbol',
+        max_length=10
+    )
