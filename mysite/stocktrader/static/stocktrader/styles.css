@@ -1,0 +1,40 @@
+body.landing {
+  background: #F6F6F6;
+}
+
+@media screen and (min-width: 1025px) {
+  body.landing {
+    height: 100%;
+    background: linear-gradient(90deg, #F6F6F6 55%, #0601FF 45%);
+  }
+}
+
+div.top-margin {
+  margin-top: 80px;
+}
+
+nav .navbar-brand {
+  /* size for brand */
+  font-size: xx-large;
+}
+
+main .form-control {
+  /* center form controls */
+  display: inline-block;
+
+  /* override Bootstrap's 100% width for form controls */
+  width: auto;
+}
+
+main {
+  /* scroll horizontally as needed */
+  overflow-x: auto;
+
+  /* center contents */
+  text-align: center;
+}
+
+img {
+  /* constrain images on small screens */
+  max-width: 100%;
+}
