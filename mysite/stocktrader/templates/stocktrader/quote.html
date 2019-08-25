@@ -8,7 +8,7 @@
 <h1>Quote</h1>
 <form action="/quote/" method="POST">
   {% csrf_token %}
-  {{ form }}
+  {{ form.as_p }}
   <input type="submit" value="Submit">
 </form>
 {% endblock %}

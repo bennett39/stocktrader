@@ -1,6 +1,20 @@
-<h2>Login</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Login</button>
-</form>
+{% extends "registration/base.html" %}
+
+{% block title %}
+  Login
+{% endblock %}
+
+{% block main %}
+<div class="card mx-auto" style="width:18rem">
+  <div class="card-header"><h1>Log In</h1></div>
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Login</button>
+    </form>
+    <hr />
+    <p>New to Stock Trader? <a href="{% url 'register' %}">Sign up</a>.</p>
+  </div>
+</div>
+{% endblock %}

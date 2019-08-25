@@ -19,13 +19,24 @@
   <tbody>
   {% for stock, d in portfolio.items %}
   <tr>
-    <td>{{stock}}</td>
-    <td>{{d.name}}</td>
-    <td>{{d.quantity}}</td>
-    <td>{{d.value}}</td>
+    <td>{{ stock }}</td>
+    <td>{{ d.name }}</td>
+    <td>{{ d.quantity }}</td>
+    <td>{{ d.value }}</td>
   </tr>
   {% endfor %}
-  </tbody>
+  <tr>
+    <td></td>
+    <td></td>
+    <th>Cash on hand:</th>
+    <th>{{ cash }}</th>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <th>TOTAL</th>
+    <th>{{ total }}</th>
+  </tr>  </tbody>
 </table>
 </div>
 {% endblock %}

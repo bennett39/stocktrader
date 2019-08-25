@@ -1,0 +1,22 @@
+{% extends "registration/base.html" %}
+
+{% block title %}
+  Sign Up
+{% endblock %}
+
+{% block main %}
+<div class="card mx-auto" style="width:18rem">
+  <div class="card-header"><h1>Sign Up</h1></div>
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+      <p>{{ field.label }}: {{ field }}</p>
+      {% endfor %}
+      <button type="submit">Sign Up</button>
+    </form>
+    <hr />
+    <p>Already have an account? <a href="/accounts/login/">Log in</a>.</p>
+  </div>
+</div>
+{% endblock %}

@@ -19,9 +19,14 @@ class HomeView(LoginRequiredMixin, View):
     def get(self, request):
         profile = Profile.objects.get(user=request.user)
         portfolio = build_portfolio(profile.transactions.all())
+        p_sum = sum((d['value'] for d in portfolio.values()))
+        total = p_sum + profile.cash
+        for d in portfolio.values():
+            d['value'] = usd(d['value'])
         context = {
-            'profile': profile,
             'portfolio': portfolio,
+            'cash': usd(profile.cash),
+            'total': usd(total),
         }
         return render(request, 'stocktrader/index.html', context)
 

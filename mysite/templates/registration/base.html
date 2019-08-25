@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+        <!-- documentation at http://getbootstrap.com/docs/4.0/, alternative themes at https://bootswatch.com/4-alpha/ -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet"/>
+
+        <link href="{% static 'stocktrader/styles.css' %}" rel="stylesheet"/>
+
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+
+        <title>Stock Trader: {% block title %}{% endblock %}</title>
+
+    </head>
+
+    <body class="landing">
+        <div class="container-fluid">
+        <div class="row top-margin">
+          <div class="col text-center">
+            <img src="{% static 'stocktrader/stocktrader-white.png' %}" alt="Stock Trader logo" class="mx-auto">
+            <p class="lead">A game to test your stock trading skills with real
+            data.</p>
+            <img src="{% static 'stocktrader/stock-trader-header.png' %}" alt="Illustration" class="mx-auto">
+          </div>
+          <div class="col-sm">
+          {% block main %}{% endblock %}
+          </div>
+        </div>
+        </div>
+    </body>
+
+</html>

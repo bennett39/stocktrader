@@ -33,7 +33,7 @@ def build_portfolio(transactions):
         )
         portfolio[symbol]['name'] = quote['name']
         portfolio[symbol]['quantity'] = quantity
-        portfolio[symbol]['value'] = usd(value)
+        portfolio[symbol]['value'] = value
     return portfolio
 
 
